@@ -1,6 +1,10 @@
 
 import SpriteKit
 
+public enum SpawnCar {
+    case never, sixteenFrames, oncePerSecond, twoSeconds, onLeave
+}
+
 /// The main view
 public class MainScene: SKScene {
     
@@ -12,6 +16,9 @@ public class MainScene: SKScene {
     var cars: [SmartCarSprite] = []
     
     var frameCount = 0
+    
+    public var spawnCars: SpawnCar = .never
+    public var carType: CarType = .small
     
     /// Called when scene moved to view
     override public func didMove(to view: SKView) {
@@ -36,6 +43,9 @@ public class MainScene: SKScene {
         
         for car in self.cars {
             if car.arrived {
+                if self.spawnCars == .onLeave {
+                    self.addCar()
+                }
                 if let index = self.cars.index(of: car) {
                     self.cars.remove(at: index)
                     car.sprite.removeFromParent()
@@ -56,8 +66,21 @@ public class MainScene: SKScene {
             car.driving = driving
         }
         
-        if frameCount % 60 == 0 {
-            addCar()
+        switch self.spawnCars {
+        case .sixteenFrames:
+            if frameCount % 16 == 0 {
+                addCar()
+            }
+        case .oncePerSecond:
+            if frameCount % 60 == 0 {
+                addCar()
+            }
+        case .twoSeconds:
+            if frameCount % 120 == 0 {
+                addCar()
+            }
+        default:
+            break
         }
     }
     
@@ -76,7 +99,7 @@ public class MainScene: SKScene {
             }
         }
         
-        let newCar = SmartCarSprite(path: path!, end: to!)
+        let newCar = SmartCarSprite(path: path!, end: to!, type: self.carType)
         self.cars.append(newCar)
         self.addChild(newCar.sprite)
         newCar.startMoving()

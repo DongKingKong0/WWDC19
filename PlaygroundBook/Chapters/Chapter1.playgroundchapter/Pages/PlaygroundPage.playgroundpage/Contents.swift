@@ -1,3 +1,11 @@
+/*:
+ # WWDC19 Traffic Simulator
+ This is a playground intended to simulate how traffic would work in a similar street map in real life.
+ 
+ All streets are randomly generated. Each cycle is unique.
+ 
+ Every car gets a start and destination point randomly assigned and traveles there, while trying to avoid crashing into other cars (the first car to be at a crossroad will proceed first).
+ */
 //#-hidden-code
 import SpriteKit
 import PlaygroundSupport
@@ -19,10 +27,22 @@ let page = PlaygroundPage.current
 page.liveView = spriteView
 //#-end-hidden-code
 
-//#-editable-code
-mainScene.addCar()
-mainScene.addCar()
-mainScene.addCar()
-mainScene.addCar()
-mainScene.addCar()
-//#-end-editable-code
+mainScene.spawnCars = /*#-editable-code*/.never/*#-end-editable-code*/
+
+mainScene.carType = /*#-editable-code*/.small/*#-end-editable-code*/
+
+for _ in 0 ... /*#-editable-code*/<#T##number of cars##Int#>/*#-end-editable-code*/ {
+    mainScene.addCar()
+}
+
+/*:
+ ## Possible textures:
+ ![empty](street_preview/street0.png)
+ ![dead end](street_preview/street1.png)
+ ![curve](street_preview/street2.png)
+ ![straight](street_preview/street3.png)
+ ![branch thing](street_preview/street4.png)
+ ![crossroad](street_preview/street5.png)
+ 
+ Source Code on [GitHub](https://github.com/DongKingKong0/WWDC19)
+ */

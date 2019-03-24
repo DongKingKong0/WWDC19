@@ -80,7 +80,7 @@ public class SmartCarSprite: CarSprite {
         }
     }
     
-    public init(path: Path, end: StreetNode) {
+    public init(path: Path, end: StreetNode, type: CarType) {
         self.speed = 1
         self.path = path
         self.endNode = end
@@ -88,9 +88,7 @@ public class SmartCarSprite: CarSprite {
         self.direction = .north
         self.driving = true
         self.timer = 0
-        super.init(type: .small)
-        
-        //self.sprite.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.sprite.size.width * 0.1, height: self.sprite.size.height), center: CGPoint(x: 0, y: 1))
+        super.init(type: type)
     }
     
     
