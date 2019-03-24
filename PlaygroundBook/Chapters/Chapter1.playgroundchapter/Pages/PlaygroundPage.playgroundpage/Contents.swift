@@ -5,6 +5,13 @@
  All streets are randomly generated. Each cycle is unique.
  
  Every car gets a start and destination point randomly assigned and traveles there, while trying to avoid crashing into other cars (the first car to be at a crossroad will proceed first).
+ 
+ ## Options for car spawning
+ * `.never`: Don't spawn new cars
+ * `.oncePerSecond`: Spawn one car per second
+ * `.onLeave`: Spawn one new car for each car that leaves the screen
+ * `.sixteenFrames`: Spawn one car every 16 frames
+ * `.twoSeconds`: Spawn one car every two seconds
  */
 //#-hidden-code
 import SpriteKit
@@ -31,6 +38,7 @@ mainScene.spawnCars = /*#-editable-code*/.never/*#-end-editable-code*/
 
 mainScene.carType = /*#-editable-code*/.small/*#-end-editable-code*/
 
+// enter start car count
 for _ in 0 ... /*#-editable-code*/<#T##number of cars##Int#>/*#-end-editable-code*/ {
     mainScene.addCar()
 }
