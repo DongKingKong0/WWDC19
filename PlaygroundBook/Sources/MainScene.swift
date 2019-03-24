@@ -43,10 +43,12 @@ public class MainScene: SKScene {
                 continue
             }
             
+            car.setTimer(currentTime)
+            
             var driving = true
             
             for c in self.cars where c != car {
-                if car.sprite.intersects(c.sprite) {
+                if car.sprite.intersects(c.sprite) && car.timer < c.timer {
                     driving = false
                 }
             }

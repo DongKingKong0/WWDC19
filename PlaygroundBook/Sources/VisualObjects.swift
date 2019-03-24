@@ -72,7 +72,7 @@ public class SmartCarSprite: CarSprite {
     let endNode: StreetNode
     var arrived: Bool
     var direction: Direction
-    var turning: Bool
+    var timer: TimeInterval
     
     public var driving: Bool {
         didSet {
@@ -87,16 +87,18 @@ public class SmartCarSprite: CarSprite {
         self.arrived = false
         self.direction = .north
         self.driving = true
-        self.turning = false
+        self.timer = 0
         super.init(type: .small)
         
         //self.sprite.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.sprite.size.width * 0.1, height: self.sprite.size.height), center: CGPoint(x: 0, y: 1))
     }
     
     
-    /*public func checkForObstacles() {
-        
-    }*/
+    public func setTimer(_ time: TimeInterval) {
+        if self.timer < 1 {
+            self.timer = time
+        }
+    }
     
     
     public func startMoving() {
@@ -109,13 +111,14 @@ public class SmartCarSprite: CarSprite {
                 x: (Double(self.path.node.x) + carPosition.x) * 0.1,
                 y: (Double(self.path.node.y) + carPosition.y) * 0.1)
             
-            self.move(from: self.path, to: previousPath)
+            self.move(from: self.path)
         } else {
             arrived = true
         }
     }
     
-    private func move(from: Path, to destination: Path) {
+    private func move(from: Path) {
+        let destination = from.previousPath!
         let newDirection = getDirection(
             from: CGPoint(x: from.node.x, y: from.node.y),
             to: CGPoint(x: destination.node.x, y: destination.node.y))
@@ -123,11 +126,7 @@ public class SmartCarSprite: CarSprite {
         
         let relativeDirection = self.getRelativeDirection(from: self.direction, to: newDirection)
         
-        if relativeDirection == .forward {
-            turning = false
-        } else {
-            turning = true
-        }
+        self.timer = 0
         
         self.direction = newDirection
         self.rotation = carPosition.rotation
@@ -139,7 +138,7 @@ public class SmartCarSprite: CarSprite {
         
         self.sprite.run(action, completion: {() -> Void in
             if (destination.previousPath != nil) {
-                self.move(from: destination, to: destination.previousPath!)
+                self.move(from: destination)
             } else {
                 self.arrived = true
             }
