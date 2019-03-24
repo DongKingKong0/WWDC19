@@ -62,7 +62,7 @@ public class StreetSprite: SpriteEntity {
 public class CarSprite: SpriteEntity {
     public init(type: CarType) {
         let texture = getCarTexture(from: type)
-        super.init(size: CGSize(width: 0.0375, height: 0.0375), textureNamed: texture)
+        super.init(size: CGSize(width: 0.0234375, height: 0.0375), textureNamed: texture)
     }
 }
 
@@ -72,6 +72,13 @@ public class SmartCarSprite: CarSprite {
     let endNode: StreetNode
     var arrived: Bool
     var direction: Direction
+    var turning: Bool
+    
+    public var driving: Bool {
+        didSet {
+            self.sprite.isPaused = !self.driving
+        }
+    }
     
     public init(path: Path, end: StreetNode) {
         self.speed = 1
@@ -79,10 +86,17 @@ public class SmartCarSprite: CarSprite {
         self.endNode = end
         self.arrived = false
         self.direction = .north
+        self.driving = true
+        self.turning = false
         super.init(type: .small)
         
-        self.sprite.physicsBody = SKPhysicsBody(rectangleOf: self.sprite.size)
+        //self.sprite.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.sprite.size.width * 0.1, height: self.sprite.size.height), center: CGPoint(x: 0, y: 1))
     }
+    
+    
+    /*public func checkForObstacles() {
+        
+    }*/
     
     
     public func startMoving() {
@@ -108,6 +122,12 @@ public class SmartCarSprite: CarSprite {
         let carPosition = getCarPosition(from: self.direction)
         
         let relativeDirection = self.getRelativeDirection(from: self.direction, to: newDirection)
+        
+        if relativeDirection == .forward {
+            turning = false
+        } else {
+            turning = true
+        }
         
         self.direction = newDirection
         self.rotation = carPosition.rotation

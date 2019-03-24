@@ -11,6 +11,8 @@ public class MainScene: SKScene {
     var startPositions: [StreetNode] = []
     var cars: [SmartCarSprite] = []
     
+    var frameCount = 0
+    
     /// Called when scene moved to view
     override public func didMove(to view: SKView) {
         super.didMove(to: view)
@@ -25,6 +27,35 @@ public class MainScene: SKScene {
             for s in i {
                 self.addChild(s.sprite)
             }
+        }
+    }
+    
+    
+    override public func update(_ currentTime: TimeInterval) {
+        frameCount += 1
+        
+        for car in self.cars {
+            if car.arrived {
+                if let index = self.cars.index(of: car) {
+                    self.cars.remove(at: index)
+                    car.sprite.removeFromParent()
+                }
+                continue
+            }
+            
+            var driving = true
+            
+            for c in self.cars where c != car {
+                if car.sprite.intersects(c.sprite) {
+                    driving = false
+                }
+            }
+            
+            car.driving = driving
+        }
+        
+        if frameCount % 60 == 0 {
+            addCar()
         }
     }
     
